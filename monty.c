@@ -29,16 +29,16 @@ int main(int argc, char *argv[]) {
     char buffer[1024];
     unsigned int line_number = 1;
     instruction_t instructions[] = {
-    {"push", push},
-    {"pall", pall},
-    {"pint", pint},
-    {"pop", pop},
-    {"swap", swap},
-    {"add", add},
-    {"nop", nop},
-    {NULL, NULL}
-};
-while (fgets(buffer, sizeof(buffer), file)) {
+        {"push", push},
+        {"pall", pall},
+        {"pint", pint},
+        {"pop", pop},
+        {"swap", swap},
+        {"add", add},
+        {"nop", nop},
+        {NULL, NULL}
+    };
+    while (fgets(buffer, sizeof(buffer), file)) {
         char *opcode = strtok(buffer, " \t\n");
         if (opcode && opcode[0] != '#') {
             char *value_str = strtok(NULL, " \t\n");
