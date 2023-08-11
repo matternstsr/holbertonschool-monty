@@ -14,7 +14,6 @@ void execute_instruction(instruction_t *instructions, stack_t **stack, char *opc
     exit(EXIT_FAILURE);
 }
 
-
 int main(int argc, char *argv[]) {
     if (argc != 2) {
         fprintf(stderr, "USAGE: monty file\n");
@@ -42,19 +41,15 @@ int main(int argc, char *argv[]) {
     while (fgets(buffer, sizeof(buffer), file)) {
         char *opcode = strtok(buffer, " \t\n");
         if (opcode && opcode[0] != '#') {
-            if (strcmp(opcode, "push") == 0) {
-                char *value_str = strtok(NULL, " \t\n");
-                if (value_str && is_integer(value_str)) {
-                    int value = atoi(value_str);
-                    execute_instruction(instructions, &stack, opcode, line_number, value);
-                } else {
-                    fprintf(stderr, "L%d: usage: push integer\n", line_number);
-                    free_stack(stack);
-                    fclose(file);
-                    return EXIT_FAILURE;
-                }
+            char *value_str = strtok(NULL, " \t\n");
+            if (value_str && is_integer(value_str)) {
+                int value = atoi(value_str);
+                execute_instruction(instructions, &stack, opcode, line_number, value);
             } else {
-                execute_instruction(instructions, &stack, opcode, line_number, 0);
+                fprintf(stderr, "L%d: usage: push integer\n", line_number);
+                free_stack(stack);
+                fclose(file);
+                return EXIT_FAILURE;
             }
         }
         line_number++;
@@ -64,3 +59,4 @@ int main(int argc, char *argv[]) {
     fclose(file);
     return EXIT_SUCCESS;
 }
+
