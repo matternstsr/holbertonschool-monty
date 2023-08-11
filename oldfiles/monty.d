@@ -65,3 +65,57 @@ int main(int argc, char *argv[]) {
     fclose(file);
     return EXIT_SUCCESS;
 }
+
+void push(stack_t **stack, int value) {
+    stack_t *new_node = malloc(sizeof(stack_t));
+    if (!new_node) {
+        fprintf(stderr, "Error: malloc failed\n");
+        exit(EXIT_FAILURE);
+    }
+    new_node->n = value;
+    new_node->prev = NULL;
+    new_node->next = *stack;
+    if (*stack) {
+        (*stack)->prev = new_node;
+    }
+    *stack = new_node;
+}
+
+void pall(stack_t **stack, unsigned int line_number) {
+    (void)line_number;
+    stack_t *current = *stack;
+    while (current) {
+        printf("%d\n", current->n);
+        current = current->next;
+    }
+}
+
+int is_integer(const char *str) {
+    if (str == NULL || str[0] == '\0') {
+        return 0;
+    }
+
+    int index = 0;
+
+    if (str[index] == '+' || str[index] == '-') {
+        index++;
+    }
+
+    while (str[index] != '\0') {
+        if (!isdigit(str[index])) {
+            return 0;
+        }
+        index++;
+    }
+
+    return 1;
+}
+
+void free_stack(stack_t *stack) {
+    while (stack) {
+        stack_t *temp = stack;
+        stack = stack->next;
+        free(temp);
+    }
+}
+
