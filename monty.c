@@ -15,6 +15,7 @@ void execute_instruction(instruction_t *instructions, stack_t **stack,
 						 char *opcode, unsigned int line_number, int value)
 {
 	int i = 0;
+
 	while (instructions[i].opcode)
 	{
 		if (strcmp(instructions[i].opcode, opcode) == 0)
@@ -33,7 +34,6 @@ void execute_instruction(instruction_t *instructions, stack_t **stack,
  * main - Entry point of the Monty program.
  * @argc: The number of command-line arguments.
  * @argv: An array of strings representing the command-line arguments.
- *
  * Return: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurs.
  */
 
