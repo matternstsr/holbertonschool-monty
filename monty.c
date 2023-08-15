@@ -11,7 +11,8 @@
 
 #include "monty.h"
 
-void execute_instruction(instruction_t *instructions, stack_t **stack, char *opcode, unsigned int line_number, int value)
+void execute_instruction(instruction_t *instructions, stack_t **stack,
+						 char *opcode, unsigned int line_number, int value)
 {
 	int i = 0;
 	while (instructions[i].opcode)
@@ -27,7 +28,6 @@ void execute_instruction(instruction_t *instructions, stack_t **stack, char *opc
 	free_stack(*stack);
 	exit(EXIT_FAILURE);
 }
-
 
 /**
  * main - Entry point of the Monty program.
