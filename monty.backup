@@ -8,6 +8,9 @@
  * @line_number: Line number of the instruction.
  * @value: Value parameter for some instructions.
  */
+
+#include "monty.h"
+
 void execute_instruction(instruction_t *instructions, stack_t **stack, char *opcode, unsigned int line_number, int value)
 {
 	int i = 0;
@@ -25,6 +28,7 @@ void execute_instruction(instruction_t *instructions, stack_t **stack, char *opc
 	exit(EXIT_FAILURE);
 }
 
+
 /**
  * main - Entry point of the Monty program.
  * @argc: The number of command-line arguments.
@@ -32,19 +36,21 @@ void execute_instruction(instruction_t *instructions, stack_t **stack, char *opc
  *
  * Return: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurs.
  */
+
+
 int main(int argc, char *argv[])
 {
 	if (argc != 2)
 	{
 		fprintf(stderr, "USAGE: monty file\n");
-		return (EXIT_FAILURE);
+		return EXIT_FAILURE;
 	}
 
 	FILE *file = fopen(argv[1], "r");
 	if (!file)
 	{
 		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
-		return (EXIT_FAILURE);
+		return EXIT_FAILURE;
 	}
 	stack_t *stack = NULL;
 	char buffer[1024];
@@ -77,7 +83,7 @@ int main(int argc, char *argv[])
 					fprintf(stderr, "L%d: usage: push integer\n", line_number);
 					free_stack(stack);
 					fclose(file);
-					return (EXIT_FAILURE);
+					return EXIT_FAILURE;
 				}
 			}
 			else
@@ -90,6 +96,5 @@ int main(int argc, char *argv[])
 
 	free_stack(stack);
 	fclose(file);
-	return (EXIT_SUCCESS);
+	return EXIT_SUCCESS;
 }
-
