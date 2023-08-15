@@ -27,5 +27,8 @@ void nop(stack_t **stack, unsigned int line_number, int value);
 int is_integer(const char *str);
 void free_stack(stack_t *stack);
 void execute_instruction(instruction_t *instructions, stack_t **stack, char *opcode, unsigned int line_number, int value);
+void process_file(const char *filename);
+int main(int argc, char *argv[]);
+
 
 #endif /* MONTY_H */
