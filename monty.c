@@ -1,6 +1,33 @@
 #include "monty.h"
 
 /**
+ * find_instruction - Find the instruction function for the given opcode.
+ * @instructions: Array of instruction_t structures.
+ * @opcode: Opcode of the instruction.
+ * Return: Function pointer to the instruction function, or NULL if not found.
+ */
+instruction_func find_instruction(instruction_t *instructions, char *opcode)
+{
+	for (int i = 0; instructions[i].opcode; i++)
+	{
+		if (strcmp(instructions[i].opcode, opcode) == 0)
+			return instructions[i].f;
+	}
+	return NULL;
+}
+
+/**
+ * handle_unknown_instruction - Handle unknown instruction error.
+ * @opcode: Unknown opcode.
+ * @line_number: Line number where the error occurred.
+ */
+void handle_unknown_instruction(char *opcode, unsigned int line_number)
+{
+	fprintf(stderr, "L%d: unknown instruction %s\n", line_number, opcode);
+	exit(EXIT_FAILURE);
+}
+
+/**
  * execute_instruction - Executes the appropriate instruction based on opcode.
  * @instructions: Array of instruction_t structures.
  * @stack: Double pointer to the head of the stack.
@@ -10,19 +37,54 @@
  */
 void execute_instruction(instruction_t *instructions, stack_t **stack, char *opcode, unsigned int line_number, int value)
 {
-	int i = 0;
-	while (instructions[i].opcode)
+	instruction_func func = find_instruction(instructions, opcode);
+	if (func)
+		func(stack, line_number, value);
+	else
+		handle_unknown_instruction(opcode, line_number);
+}
+
+/**
+ * read_and_execute_instructions - Read and execute instructions from file.
+ * @file: Pointer to the input file.
+ * @instructions: Array of instruction_t structures.
+ */
+void read_and_execute_instructions(FILE *file, instruction_t *instructions)
+{
+	char buffer[1024];
+	unsigned int line_number = 1;
+	stack_t *stack = NULL;
+
+	while (fgets(buffer, sizeof(buffer), file))
 	{
-		if (strcmp(instructions[i].opcode, opcode) == 0)
+		char *opcode = strtok(buffer, " \t\n");
+		if (opcode && opcode[0] != '#')
 		{
-			instructions[i].f(stack, line_number, value);
-			return;
+			if (strcmp(opcode, "push") == 0)
+			{
+				char *value_str = strtok(NULL, " \t\n");
+				if (value_str && is_integer(value_str))
+				{
+					int value = atoi(value_str);
+					execute_instruction(instructions, &stack, opcode, line_number, value);
+				}
+				else
+				{
+					fprintf(stderr, "L%d: usage: push integer\n", line_number);
+					free_stack(stack);
+					fclose(file);
+					exit(EXIT_FAILURE);
+				}
+			}
+			else
+			{
+				execute_instruction(instructions, &stack, opcode, line_number, 0);
+			}
 		}
-		i++;
+		line_number++;
 	}
-	fprintf(stderr, "L%d: unknown instruction %s\n", line_number, opcode);
-	free_stack(*stack);
-	exit(EXIT_FAILURE);
+
+	free_stack(stack);
 }
 
 /**
@@ -46,9 +108,7 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
 		return (EXIT_FAILURE);
 	}
-	stack_t *stack = NULL;
-	char buffer[1024];
-	unsigned int line_number = 1;
+
 	instruction_t instructions[] = {
 		{"push", push},
 		{"pall", pall},
@@ -59,36 +119,9 @@ int main(int argc, char *argv[])
 		{"nop", nop},
 		{NULL, NULL}
 	};
-	while (fgets(buffer, sizeof(buffer), file))
-	{
-		char *opcode = strtok(buffer, " \t\n");
-		if (opcode && opcode[0] != '#')
-		{
-			if (strcmp(opcode, "push") == 0)
-			{
-				char *value_str = strtok(NULL, " \t\n");
-				if (value_str && is_integer(value_str))
-				{
-					int value = atoi(value_str);
-					execute_instruction(instructions, &stack, opcode, line_number, value);
-				}
-				else
-				{
-					fprintf(stderr, "L%d: usage: push integer\n", line_number);
-					free_stack(stack);
-					fclose(file);
-					return (EXIT_FAILURE);
-				}
-			}
-			else
-			{
-				execute_instruction(instructions, &stack, opcode, line_number, 0);
-			}
-		}
-		line_number++;
-	}
 
-	free_stack(stack);
+	read_and_execute_instructions(file, instructions);
+
 	fclose(file);
 	return (EXIT_SUCCESS);
 }
