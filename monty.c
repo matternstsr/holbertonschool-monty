@@ -38,14 +38,14 @@ void execute_instruction(instruction_t *instructions, stack_t **stack,
  */
 
 int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        fprintf(stderr, "USAGE: monty file\n");
-        exit(EXIT_FAILURE);
-    }
+	if (argc != 2) {
+		fprintf(stderr, "USAGE: monty file\n");
+		exit(EXIT_FAILURE);
+	}
 
-    process_file(argv[1]);
+	process_file(argv[1]);
 
-    return 0;
+	return 0;
 }
 
 
@@ -56,58 +56,58 @@ int main(int argc, char *argv[]) {
 
 void process_file(const char *filename)
 {
-    FILE *file = fopen(filename, "r");
-    if (!file)
-    {
-        fprintf(stderr, "Error: Can't open file %s\n", filename);
-        exit(EXIT_FAILURE);
-    }
-
-    stack_t *stack = NULL;
-    char buffer[1024];
-    unsigned int line_number = 1;
-
-    instruction_t instructions[] = {
-        {"push", push},
-        {"pall", pall},
-        {"pint", pint},
-        {"pop", pop},
-        {"swap", swap},
-        {"add", add},
-        {"nop", nop},
-        {NULL, NULL}
-    };
-
-    while (fgets(buffer, sizeof(buffer), file))
-    {
-        char *opcode = strtok(buffer, " \t\n");
-        if (opcode && opcode[0] != '#')
+	FILE *file = fopen(filename, "r");
+	if (!file)
 	{
-            if (strcmp(opcode, "push") == 0)
-	    {
-                char *value_str = strtok(NULL, " \t\n");
-                if (value_str && is_integer(value_str))
+		fprintf(stderr, "Error: Can't open file %s\n", filename);
+		exit(EXIT_FAILURE);
+	}
+
+	stack_t *stack = NULL;
+	char buffer[1024];
+	unsigned int line_number = 1;
+
+	instruction_t instructions[] = {
+		{"push", push},
+		{"pall", pall},
+		{"pint", pint},
+		{"pop", pop},
+		{"swap", swap},
+		{"add", add},
+		{"nop", nop},
+		{NULL, NULL}
+	};
+
+	while (fgets(buffer, sizeof(buffer), file))
+	{
+		char *opcode = strtok(buffer, " \t\n");
+		if (opcode && opcode[0] != '#')
+	{
+			if (strcmp(opcode, "push") == 0)
 		{
-                    int value = atoi(value_str);
-                    execute_instruction(instructions, &stack, opcode, line_number, value);
-                }
+				char *value_str = strtok(NULL, " \t\n");
+				if (value_str && is_integer(value_str))
+		{
+					int value = atoi(value_str);
+					execute_instruction(instructions, &stack, opcode, line_number, value);
+				}
 		else
 		{
-                    fprintf(stderr, "L%d: usage: push integer\n", line_number);
-                    free_stack(stack);
-                    fclose(file);
-                    exit(EXIT_FAILURE);
-                }
-            }
-	    else
-	    {
-                execute_instruction(instructions, &stack, opcode, line_number, 0);
-            }
-        }
-        line_number++;
-    }
+					fprintf(stderr, "L%d: usage: push integer\n", line_number);
+					free_stack(stack);
+					fclose(file);
+					exit(EXIT_FAILURE);
+				}
+			}
+		else
+		{
+				execute_instruction(instructions, &stack, opcode, line_number, 0);
+			}
+		}
+		line_number++;
+	}
 
-    free_stack(stack);
-    fclose(file);
-    exit(EXIT_SUCCESS);
+	free_stack(stack);
+	fclose(file);
+	exit(EXIT_SUCCESS);
 }
