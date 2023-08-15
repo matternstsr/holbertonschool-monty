@@ -37,13 +37,21 @@ void handle_unknown_instruction(char *opcode, unsigned int line_number)
  */
 void exec_instr(instruction_t *instr, stack_t **stack, char *opcode, unsigned int line, int value)
 {
-	instruction_func func = find_instruction(instr, opcode);
-	if (func)
-		func(stack, line, value);
-	else
-		handle_unknown_instruction(opcode, line);
+	if (instr->opcode != NULL && strcmp(instr->opcode, opcode) == 0)
+	{
+		if (instr->func != NULL)
+			instr->func(stack, line, value);
+		else
+		{
+			fprintf(stderr, "L%u: Unknown instruction %s\n", line, opcode);
+			free_resources(stack);
+			exit(EXIT_FAILURE);
+		}
+	}
 }
 
+
+/*
  * read_and_execute_instructions - Read and execute instructions from file.
  * @file: Pointer to the input file.
  * @instructions: Array of instruction_t structures.
