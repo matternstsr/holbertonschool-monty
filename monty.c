@@ -28,23 +28,22 @@ void handle_unknown_instruction(char *opcode, unsigned int line_number)
 }
 
 /**
- * execute_instruction - Executes the appropriate instruction based on opcode.
- * @instructions: Array of instruction_t structures.
- * @stack: Double pointer to the head of the stack.
- * @opcode: Opcode of the instruction.
- * @line_number: Line number of the instruction.
+ * exec_instr - Execute instruction based on opcode.
+ * @instr: Array of instruction_t structs.
+ * @stack: Double pointer to stack.
+ * @opcode: Opcode of instruction.
+ * @line: Line number.
  * @value: Value parameter for some instructions.
  */
-void execute_instruction(instruction_t *instructions, stack_t **stack, char *opcode, unsigned int line_number, int value)
+void exec_instr(instruction_t *instr, stack_t **stack, char *opcode, unsigned int line, int value)
 {
-	instruction_func func = find_instruction(instructions, opcode);
+	instruction_func func = find_instruction(instr, opcode);
 	if (func)
-		func(stack, line_number, value);
+		func(stack, line, value);
 	else
-		handle_unknown_instruction(opcode, line_number);
+		handle_unknown_instruction(opcode, line);
 }
 
-/**
  * read_and_execute_instructions - Read and execute instructions from file.
  * @file: Pointer to the input file.
  * @instructions: Array of instruction_t structures.
@@ -88,11 +87,11 @@ void read_and_execute_instructions(FILE *file, instruction_t *instructions)
 }
 
 /**
- * main - Entry point of the Monty program.
- * @argc: The number of command-line arguments.
- * @argv: An array of strings representing the command-line arguments.
+ * main - Entry point of Monty program.
+ * @argc: Number of command-line arguments.
+ * @argv: Array of strings representing arguments.
  *
- * Return: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurs.
+ * Return: EXIT_SUCCESS if successful, EXIT_FAILURE if error occurs.
  */
 int main(int argc, char *argv[])
 {
@@ -109,7 +108,7 @@ int main(int argc, char *argv[])
 		return (EXIT_FAILURE);
 	}
 
-	instruction_t instructions[] = {
+	instruction_t instr[] = {
 		{"push", push},
 		{"pall", pall},
 		{"pint", pint},
@@ -120,9 +119,8 @@ int main(int argc, char *argv[])
 		{NULL, NULL}
 	};
 
-	read_and_execute_instructions(file, instructions);
+	read_and_execute_instructions(file, instr);
 
 	fclose(file);
 	return (EXIT_SUCCESS);
 }
-

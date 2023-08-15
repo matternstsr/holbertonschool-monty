@@ -26,9 +26,6 @@ void add(stack_t **stack, unsigned int line_number, int value);
 void nop(stack_t **stack, unsigned int line_number, int value);
 int is_integer(const char *str);
 void free_stack(stack_t *stack);
-instruction_func find_instruction(instruction_t *instructions, char *opcode);
-void handle_unknown_instruction(char *opcode, unsigned int line_number);
-void exec_instr(instruction_t *instr, stack_t **stack, char *opcode, unsigned int line, int value)
-int main(int argc, char *argv[])
+void execute_instruction(instruction_t *instructions, stack_t **stack, char *opcode, unsigned int line_number, int value);
 
 #endif /* MONTY_H */
