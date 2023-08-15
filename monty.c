@@ -71,16 +71,9 @@ void process_file(const char *filename)
 	unsigned int line_number = 1;
 
 	instruction_t instructions[] = {
-		{"push", push},
-		{"pall", pall},
-		{"pint", pint},
-		{"pop", pop},
-		{"swap", swap},
-		{"add", add},
-		{"nop", nop},
-		{NULL, NULL}
-	};
-
+    {"push", push}, {"pall", pall}, {"pint", pint}, {"pop", pop},
+    {"swap", swap}, {"add", add}, {"nop", nop}, {NULL, NULL}
+};
 	while (fgets(buffer, sizeof(buffer), file))
 	{
 		*opcode = strtok(buffer, " \t\n");
