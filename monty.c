@@ -37,15 +37,17 @@ void execute_instruction(instruction_t *instructions, stack_t **stack,
  * Return: EXIT_SUCCESS if successful, EXIT_FAILURE if an error occurs.
  */
 
-int main(int argc, char *argv[]) {
-	if (argc != 2) {
+int main(int argc, char *argv[])
+{
+	if (argc != 2)
+	{
 		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
 
 	process_file(argv[1]);
 
-	return 0;
+	return (0);
 }
 
 
@@ -57,6 +59,7 @@ int main(int argc, char *argv[]) {
 void process_file(const char *filename)
 {
 	FILE *file = fopen(filename, "r");
+
 	if (!file)
 	{
 		fprintf(stderr, "Error: Can't open file %s\n", filename);
@@ -81,14 +84,17 @@ void process_file(const char *filename)
 	while (fgets(buffer, sizeof(buffer), file))
 	{
 		char *opcode = strtok(buffer, " \t\n");
+
 		if (opcode && opcode[0] != '#')
 	{
 			if (strcmp(opcode, "push") == 0)
 		{
 				char *value_str = strtok(NULL, " \t\n");
+
 				if (value_str && is_integer(value_str))
 		{
 					int value = atoi(value_str);
+
 					execute_instruction(instructions, &stack, opcode, line_number, value);
 				}
 		else
