@@ -52,11 +52,6 @@ int main(int argc, char *argv[]) {
 /**
  * process_file - Process a Monty bytecode file and execute instructions.
  * @filename: The name of the Monty bytecode file to be processed.
- *
- * This function reads a Monty bytecode file line by line, parses the instructions,
- * and executes them based on the provided instruction set. It maintains a stack
- * data structure and performs operations accordingly. The supported instructions
- * are defined by the 'instruction_t' structure.
  */
 
 void process_file(const char *filename)
