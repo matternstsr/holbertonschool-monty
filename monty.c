@@ -67,21 +67,30 @@ void process_file(const char *filename)
 	}
 
 	stack_t *stack = NULL;
-	char buffer[1024], char *opcode, char *value_str;
+	char buffer[1024];
 	unsigned int line_number = 1;
 
 	instruction_t instructions[] = {
-    {"push", push}, {"pall", pall}, {"pint", pint}, {"pop", pop},
-    {"swap", swap}, {"add", add}, {"nop", nop}, {NULL, NULL}
-};
+		{"push", push},
+		{"pall", pall},
+		{"pint", pint},
+		{"pop", pop},
+		{"swap", swap},
+		{"add", add},
+		{"nop", nop},
+		{NULL, NULL}
+	};
+
 	while (fgets(buffer, sizeof(buffer), file))
 	{
-		*opcode = strtok(buffer, " \t\n");
+		char *opcode = strtok(buffer, " \t\n");
+
 		if (opcode && opcode[0] != '#')
 	{
 			if (strcmp(opcode, "push") == 0)
 		{
-				*value_str = strtok(NULL, " \t\n");
+				char *value_str = strtok(NULL, " \t\n");
+
 				if (value_str && is_integer(value_str))
 		{
 					int value = atoi(value_str);
@@ -103,6 +112,7 @@ void process_file(const char *filename)
 		}
 		line_number++;
 	}
+
 	free_stack(stack);
 	fclose(file);
 	exit(EXIT_SUCCESS);
